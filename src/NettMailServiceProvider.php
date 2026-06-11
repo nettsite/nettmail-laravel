@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use NettSite\NettMail\Console\Commands\DispatchScheduledCampaignsCommand;
 use NettSite\NettMail\Console\Commands\PollBounceMailboxCommand;
+use NettSite\NettMail\Console\Commands\PurgeRetentionCommand;
 use NettSite\NettMail\Console\Commands\SyncContactsCommand;
 use NettSite\NettMail\Contacts\ContactSourceRegistry;
 use Nettsite\NettMail\Core\Contracts\BounceParserContract;
@@ -45,6 +46,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasCommand(SyncContactsCommand::class)
             ->hasCommand(DispatchScheduledCampaignsCommand::class)
             ->hasCommand(PollBounceMailboxCommand::class)
+            ->hasCommand(PurgeRetentionCommand::class)
             ->discoversMigrations()
             ->runsMigrations();
     }
