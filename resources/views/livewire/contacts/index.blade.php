@@ -27,9 +27,11 @@ class extends Component
     {
         return Contact::query()
             ->when($this->search !== '', function ($query): void {
-                $query->where('email', 'like', "%{$this->search}%")
-                    ->orWhere('first_name', 'like', "%{$this->search}%")
-                    ->orWhere('last_name', 'like', "%{$this->search}%");
+                $query->where(function ($query): void {
+                    $query->where('email', 'like', "%{$this->search}%")
+                        ->orWhere('first_name', 'like', "%{$this->search}%")
+                        ->orWhere('last_name', 'like', "%{$this->search}%");
+                });
             })
             ->orderBy('email')
             ->paginate(20);
