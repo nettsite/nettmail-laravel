@@ -19,4 +19,6 @@ Route::group(['prefix' => $prefix, 'middleware' => $middleware, 'as' => 'nettmai
 
     Route::livewire('campaigns', 'nettmail::campaigns.index')->name('campaigns.index');
     Route::livewire('campaigns/{campaign}', 'nettmail::campaigns.show')->name('campaigns.show');
+
+    Route::livewire('settings', 'nettmail::settings.index')->name('settings');
 });
