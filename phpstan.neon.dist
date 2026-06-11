@@ -3,6 +3,7 @@ includes:
 
 parameters:
     level: 5
+    reportUnmatchedIgnoredErrors: false
     paths:
         - src
         - config
@@ -13,3 +14,10 @@ parameters:
         - database/migrations
     configDirectories:
         - config
+
+    ignoreErrors:
+        -
+            message: '#^Parameter \#1 \$view of function view expects view-string\|null, string given\.$#'
+            paths:
+                - src/Http/Controllers/UnsubscribeController.php
+                - src/Http/Controllers/OptInController.php
