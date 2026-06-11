@@ -2,9 +2,9 @@
 
 namespace NettSite\NettMail;
 
+use NettSite\NettMail\Commands\NettMailCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use NettSite\NettMail\Commands\NettMailCommand;
 
 class NettMailServiceProvider extends PackageServiceProvider
 {
