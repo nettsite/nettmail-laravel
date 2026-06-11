@@ -22,11 +22,13 @@ class Template extends Model
         'design',
         'html',
         'plain_text',
+        'archived_at',
     ];
 
     protected $casts = [
         'type' => TemplateType::class,
         'design' => 'array',
+        'archived_at' => 'datetime',
     ];
 
     /** @return HasMany<Campaign, $this> */

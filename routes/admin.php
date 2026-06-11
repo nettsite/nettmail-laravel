@@ -8,6 +8,9 @@ $middleware = config('nettmail.routes.middleware');
 Route::group(['prefix' => $prefix, 'middleware' => $middleware, 'as' => 'nettmail.'], function (): void {
     Route::livewire('dashboard', 'nettmail::dashboard')->name('dashboard');
 
+    Route::livewire('templates', 'nettmail::templates.index')->name('templates.index');
+    Route::livewire('templates/{template}', 'nettmail::templates.show')->name('templates.show');
+
     Route::livewire('contacts', 'nettmail::contacts.index')->name('contacts.index');
     Route::livewire('contacts/{contact}', 'nettmail::contacts.show')->name('contacts.show');
 
