@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use NettSite\NettMail\Contacts\DoubleOptInNotifier;
 use Nettsite\NettMail\Core\Domain\Contacts\ListMembership as CoreListMembership;
 use Nettsite\NettMail\Core\Domain\Contacts\MembershipStatus;
 
@@ -32,6 +33,13 @@ class ListContact extends Model
         'subscribed_at' => 'datetime',
         'unsubscribed_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(function (ListContact $listContact): void {
+            app(DoubleOptInNotifier::class)->handle($listContact);
+        });
+    }
 
     /** @return BelongsTo<MailingList, $this> */
     public function list(): BelongsTo

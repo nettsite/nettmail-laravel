@@ -5,6 +5,8 @@ namespace NettSite\NettMail;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use Illuminate\Support\Facades\Mail;
+use NettSite\NettMail\Console\Commands\SyncContactsCommand;
+use NettSite\NettMail\Contacts\ContactSourceRegistry;
 use Nettsite\NettMail\Core\Contracts\MailDriverContract;
 use Nettsite\NettMail\Core\Contracts\StorageAdapterContract;
 use Nettsite\NettMail\Core\Domain\Contacts\OptInTokenGenerator;
@@ -32,6 +34,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasRoute('webhooks')
             ->hasRoute('web')
+            ->hasCommand(SyncContactsCommand::class)
             ->discoversMigrations()
             ->runsMigrations();
     }
@@ -57,6 +60,16 @@ class NettMailServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(OptInTokenGenerator::class, function (): OptInTokenGenerator {
             return new OptInTokenGenerator((string) config('app.key'));
+        });
+
+        $this->app->singleton(ContactSourceRegistry::class, function ($app): ContactSourceRegistry {
+            $registry = new ContactSourceRegistry;
+
+            foreach ($app->tagged('nettmail.contact_sources') as $source) {
+                $registry->register($source);
+            }
+
+            return $registry;
         });
     }
 
