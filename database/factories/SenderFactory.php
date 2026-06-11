@@ -10,7 +10,6 @@ class SenderFactory extends Factory
 {
     protected $model = Sender::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

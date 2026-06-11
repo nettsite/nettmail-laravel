@@ -10,7 +10,6 @@ class ContactFactory extends Factory
 {
     protected $model = Contact::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

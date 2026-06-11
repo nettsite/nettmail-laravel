@@ -13,7 +13,6 @@ class ListContactFactory extends Factory
 {
     protected $model = ListContact::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

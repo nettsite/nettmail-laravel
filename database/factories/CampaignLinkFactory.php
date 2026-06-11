@@ -11,7 +11,6 @@ class CampaignLinkFactory extends Factory
 {
     protected $model = CampaignLink::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

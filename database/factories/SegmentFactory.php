@@ -11,7 +11,6 @@ class SegmentFactory extends Factory
 {
     protected $model = Segment::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

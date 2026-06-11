@@ -11,7 +11,6 @@ class TemplateFactory extends Factory
 {
     protected $model = Template::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

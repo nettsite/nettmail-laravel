@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Nettsite\NettMail\Core\Domain\Campaigns\Campaign as CoreCampaign;
 use Nettsite\NettMail\Core\Domain\Campaigns\CampaignStatus;
 
@@ -99,6 +100,6 @@ class Campaign extends Model
         $this->segment_id = $campaign->segmentId;
         $this->sender_id = $campaign->senderId;
         $this->status = $campaign->status;
-        $this->scheduled_at = $campaign->scheduledAt;
+        $this->scheduled_at = $campaign->scheduledAt !== null ? Carbon::instance($campaign->scheduledAt) : null;
     }
 }

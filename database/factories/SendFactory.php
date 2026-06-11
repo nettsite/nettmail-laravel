@@ -11,7 +11,6 @@ class SendFactory extends Factory
 {
     protected $model = Send::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

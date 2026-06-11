@@ -13,7 +13,6 @@ class CampaignFactory extends Factory
 {
     protected $model = Campaign::class;
 
-    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

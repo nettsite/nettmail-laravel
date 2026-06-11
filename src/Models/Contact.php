@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Nettsite\NettMail\Core\Domain\Contacts\BounceType;
 use Nettsite\NettMail\Core\Domain\Contacts\Contact as CoreContact;
 
@@ -77,8 +78,8 @@ class Contact extends Model
         $this->metadata = $contact->metadata;
         $this->source_type = $contact->sourceType;
         $this->source_id = $contact->sourceId;
-        $this->global_unsubscribed_at = $contact->globalUnsubscribedAt;
-        $this->bounced_at = $contact->bouncedAt;
+        $this->global_unsubscribed_at = $contact->globalUnsubscribedAt !== null ? Carbon::instance($contact->globalUnsubscribedAt) : null;
+        $this->bounced_at = $contact->bouncedAt !== null ? Carbon::instance($contact->bouncedAt) : null;
         $this->bounce_type = $contact->bounceType;
         $this->consecutive_soft_bounces = $contact->consecutiveSoftBounces;
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Nettsite\NettMail\Core\Domain\Contacts\ListMembership as CoreListMembership;
 use Nettsite\NettMail\Core\Domain\Contacts\MembershipStatus;
 
@@ -61,6 +62,6 @@ class ListContact extends Model
         $this->contact_id = $membership->contactId;
         $this->status = $membership->status;
         $this->tags = $membership->tags;
-        $this->subscribed_at = $membership->subscribedAt;
+        $this->subscribed_at = $membership->subscribedAt !== null ? Carbon::instance($membership->subscribedAt) : null;
     }
 }
