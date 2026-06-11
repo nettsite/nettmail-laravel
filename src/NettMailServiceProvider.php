@@ -4,6 +4,7 @@ namespace NettSite\NettMail;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
+use Illuminate\Support\Facades\Mail;
 use Nettsite\NettMail\Core\Contracts\MailDriverContract;
 use Nettsite\NettMail\Core\Contracts\StorageAdapterContract;
 use Nettsite\NettMail\Core\Drivers\MailersendDriver;
@@ -14,6 +15,7 @@ use Nettsite\NettMail\Core\Drivers\ResendDriver;
 use Nettsite\NettMail\Core\Drivers\SesDriver;
 use Nettsite\NettMail\Core\Drivers\SmtpDriver;
 use Nettsite\NettMail\Core\NettMail as CoreNettMail;
+use NettSite\NettMail\Mail\NettMailTransport;
 use NettSite\NettMail\Storage\EloquentAdapter;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -42,6 +44,16 @@ class NettMailServiceProvider extends PackageServiceProvider
             return new CoreNettMail(
                 $app->make(MailDriverContract::class),
                 $app->make(StorageAdapterContract::class),
+            );
+        });
+    }
+
+    public function packageBooted(): void
+    {
+        Mail::extend('nettmail', function (): NettMailTransport {
+            return new NettMailTransport(
+                $this->app->make(CoreNettMail::class),
+                $this->app->make(StorageAdapterContract::class),
             );
         });
     }
