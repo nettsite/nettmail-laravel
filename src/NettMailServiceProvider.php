@@ -7,6 +7,8 @@ use GuzzleHttp\Psr7\HttpFactory;
 use Illuminate\Support\Facades\Mail;
 use Nettsite\NettMail\Core\Contracts\MailDriverContract;
 use Nettsite\NettMail\Core\Contracts\StorageAdapterContract;
+use Nettsite\NettMail\Core\Domain\Contacts\OptInTokenGenerator;
+use Nettsite\NettMail\Core\Domain\Contacts\UnsubscribeTokenGenerator;
 use Nettsite\NettMail\Core\Drivers\MailersendDriver;
 use Nettsite\NettMail\Core\Drivers\MailgunDriver;
 use Nettsite\NettMail\Core\Drivers\PhpMailDriver;
@@ -29,6 +31,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasRoute('webhooks')
+            ->hasRoute('web')
             ->discoversMigrations()
             ->runsMigrations();
     }
@@ -46,6 +49,14 @@ class NettMailServiceProvider extends PackageServiceProvider
                 $app->make(MailDriverContract::class),
                 $app->make(StorageAdapterContract::class),
             );
+        });
+
+        $this->app->singleton(UnsubscribeTokenGenerator::class, function (): UnsubscribeTokenGenerator {
+            return new UnsubscribeTokenGenerator((string) config('app.key'));
+        });
+
+        $this->app->singleton(OptInTokenGenerator::class, function (): OptInTokenGenerator {
+            return new OptInTokenGenerator((string) config('app.key'));
         });
     }
 
