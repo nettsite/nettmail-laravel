@@ -8,10 +8,14 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use NettSite\NettMail\Console\Commands\DispatchScheduledCampaignsCommand;
+use NettSite\NettMail\Console\Commands\PollBounceMailboxCommand;
 use NettSite\NettMail\Console\Commands\SyncContactsCommand;
 use NettSite\NettMail\Contacts\ContactSourceRegistry;
+use Nettsite\NettMail\Core\Contracts\BounceParserContract;
+use Nettsite\NettMail\Core\Contracts\MailboxContract;
 use Nettsite\NettMail\Core\Contracts\MailDriverContract;
 use Nettsite\NettMail\Core\Contracts\StorageAdapterContract;
+use Nettsite\NettMail\Core\Domain\Bounces\DsnParser;
 use Nettsite\NettMail\Core\Domain\Contacts\OptInTokenGenerator;
 use Nettsite\NettMail\Core\Domain\Contacts\UnsubscribeTokenGenerator;
 use Nettsite\NettMail\Core\Drivers\MailersendDriver;
@@ -23,6 +27,7 @@ use Nettsite\NettMail\Core\Drivers\SesDriver;
 use Nettsite\NettMail\Core\Drivers\SmtpDriver;
 use Nettsite\NettMail\Core\NettMail as CoreNettMail;
 use NettSite\NettMail\Mail\NettMailTransport;
+use NettSite\NettMail\Mailbox\ImapMailbox;
 use NettSite\NettMail\Storage\EloquentAdapter;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -39,6 +44,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasRoute('web')
             ->hasCommand(SyncContactsCommand::class)
             ->hasCommand(DispatchScheduledCampaignsCommand::class)
+            ->hasCommand(PollBounceMailboxCommand::class)
             ->discoversMigrations()
             ->runsMigrations();
     }
@@ -50,6 +56,12 @@ class NettMailServiceProvider extends PackageServiceProvider
         });
 
         $this->app->bind(StorageAdapterContract::class, EloquentAdapter::class);
+
+        $this->app->bind(MailboxContract::class, function (): MailboxContract {
+            return new ImapMailbox(config('nettmail.bounces.mailbox'));
+        });
+
+        $this->app->bind(BounceParserContract::class, DsnParser::class);
 
         $this->app->singleton(CoreNettMail::class, function ($app): CoreNettMail {
             return new CoreNettMail(
