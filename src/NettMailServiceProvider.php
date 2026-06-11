@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\HttpFactory;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Livewire;
 use NettSite\NettMail\Console\Commands\DispatchScheduledCampaignsCommand;
 use NettSite\NettMail\Console\Commands\PollBounceMailboxCommand;
 use NettSite\NettMail\Console\Commands\PurgeRetentionCommand;
@@ -43,6 +44,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasRoute('webhooks')
             ->hasRoute('web')
+            ->hasRoute('admin')
             ->hasCommand(SyncContactsCommand::class)
             ->hasCommand(DispatchScheduledCampaignsCommand::class)
             ->hasCommand(PollBounceMailboxCommand::class)
@@ -93,6 +95,8 @@ class NettMailServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        Livewire::addNamespace('nettmail', __DIR__.'/../resources/views/livewire');
+
         Mail::extend('nettmail', function (): NettMailTransport {
             return new NettMailTransport(
                 $this->app->make(CoreNettMail::class),

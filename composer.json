@@ -19,6 +19,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "illuminate/contracts": "^11.0||^12.0||^13.0",
         "illuminate/database": "^11.0||^12.0||^13.0",
+        "livewire/livewire": "^4.3",
         "nettsite/nettmail-core": "@dev",
         "spatie/laravel-package-tools": "^1.16",
         "webklex/php-imap": "^6.0"
