@@ -5,12 +5,12 @@ namespace NettSite\NettMail\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \NettSite\NettMail\NettMail
+ * @see \Nettsite\NettMail\Core\NettMail
  */
 class NettMail extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \NettSite\NettMail\NettMail::class;
+        return \Nettsite\NettMail\Core\NettMail::class;
     }
 }

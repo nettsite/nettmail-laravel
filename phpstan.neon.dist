@@ -8,3 +8,8 @@ parameters:
         - config
         - database
     tmpDir: build/phpstan
+    checkModelProperties: true
+    databaseMigrationsPath:
+        - database/migrations
+    configDirectories:
+        - config
