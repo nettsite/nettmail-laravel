@@ -13,4 +13,7 @@ Route::group(['prefix' => $prefix, 'middleware' => $middleware, 'as' => 'nettmai
 
     Route::livewire('lists', 'nettmail::lists.index')->name('lists.index');
     Route::livewire('lists/{list}', 'nettmail::lists.show')->name('lists.show');
+
+    Route::livewire('segments', 'nettmail::segments.index')->name('segments.index');
+    Route::livewire('segments/{segment}', 'nettmail::segments.show')->name('segments.show');
 });
