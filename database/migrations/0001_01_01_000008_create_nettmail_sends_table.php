@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('provider_message_id')->nullable()->index();
             $table->string('status');
             $table->timestamp('sent_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamp('opened_at')->nullable();
             $table->timestamp('clicked_at')->nullable();
             $table->timestamp('bounced_at')->nullable();

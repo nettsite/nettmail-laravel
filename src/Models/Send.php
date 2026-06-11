@@ -23,6 +23,7 @@ class Send extends Model
         'provider_message_id',
         'status',
         'sent_at',
+        'delivered_at',
         'opened_at',
         'clicked_at',
         'bounced_at',
@@ -30,6 +31,7 @@ class Send extends Model
 
     protected $casts = [
         'sent_at' => 'datetime',
+        'delivered_at' => 'datetime',
         'opened_at' => 'datetime',
         'clicked_at' => 'datetime',
         'bounced_at' => 'datetime',

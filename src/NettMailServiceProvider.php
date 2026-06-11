@@ -28,6 +28,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->name('nettmail')
             ->hasConfigFile()
             ->hasViews()
+            ->hasRoute('webhooks')
             ->discoversMigrations()
             ->runsMigrations();
     }
