@@ -4,7 +4,10 @@ namespace NettSite\NettMail;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
+use NettSite\NettMail\Console\Commands\DispatchScheduledCampaignsCommand;
 use NettSite\NettMail\Console\Commands\SyncContactsCommand;
 use NettSite\NettMail\Contacts\ContactSourceRegistry;
 use Nettsite\NettMail\Core\Contracts\MailDriverContract;
@@ -35,6 +38,7 @@ class NettMailServiceProvider extends PackageServiceProvider
             ->hasRoute('webhooks')
             ->hasRoute('web')
             ->hasCommand(SyncContactsCommand::class)
+            ->hasCommand(DispatchScheduledCampaignsCommand::class)
             ->discoversMigrations()
             ->runsMigrations();
     }
@@ -80,6 +84,10 @@ class NettMailServiceProvider extends PackageServiceProvider
                 $this->app->make(CoreNettMail::class),
                 $this->app->make(StorageAdapterContract::class),
             );
+        });
+
+        RateLimiter::for('nettmail-campaign-send', function (): Limit {
+            return Limit::perMinute((int) config('nettmail.sending.rate_limit'));
         });
     }
 

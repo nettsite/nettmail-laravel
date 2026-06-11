@@ -30,6 +30,9 @@ class Campaign extends Model
         'track_clicks',
         'scheduled_at',
         'sent_at',
+        'prepared_html',
+        'prepared_text',
+        'send_token_placeholder',
     ];
 
     protected $casts = [
@@ -74,6 +77,15 @@ class Campaign extends Model
     public function links(): HasMany
     {
         return $this->hasMany(CampaignLink::class, 'campaign_id');
+    }
+
+    public function transitionTo(CampaignStatus $status): void
+    {
+        $domain = $this->toDomain();
+        $domain->transitionTo($status);
+
+        $this->status = $domain->status;
+        $this->save();
     }
 
     public function toDomain(): CoreCampaign
