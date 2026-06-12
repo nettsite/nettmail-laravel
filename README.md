@@ -27,18 +27,27 @@ You can publish the config file with:
 php artisan vendor:publish --tag="nettmail-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
+The config file lets you configure the mail driver (`php`, `smtp`, `resend`, `mailersend`, `mailgun`, `postmark`, `ses`), default sender identity, bounce mailbox, sending rate limit, retention period, and CAN-SPAM compliance address. See `config/nettmail.php` after publishing for the full list of options.
 
 Optionally, you can publish the views using
 
 ```bash
 php artisan vendor:publish --tag="nettmail-views"
 ```
+
+The template editor uses the [Unlayer](https://unlayer.com) drag-and-drop email builder, bundled as a prebuilt asset. Set your Unlayer project ID (from your unlayer.com dashboard) in `.env`:
+
+```env
+NETTMAIL_UNLAYER_PROJECT_ID=287570
+```
+
+Publish the editor asset with:
+
+```bash
+php artisan vendor:publish --tag="nettmail-assets"
+```
+
+This copies `unlayer-editor.js` to `public/vendor/nettmail`. Re-run this command after upgrading the package to pick up editor updates.
 
 The admin UI is mounted at `/nettmail` (configurable via `NETTMAIL_ROUTES_PREFIX`) behind the `web` and `auth` middleware (configurable via `routes.middleware`). It includes pages for the dashboard, contacts, lists, segments, campaigns, templates, and settings.
 

@@ -41,6 +41,7 @@ class NettMailServiceProvider extends PackageServiceProvider
         $package
             ->name('nettmail')
             ->hasConfigFile()
+            ->hasAssets()
             ->hasViews()
             ->hasRoute('webhooks')
             ->hasRoute('web')

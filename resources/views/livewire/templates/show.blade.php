@@ -33,6 +33,9 @@ class extends Component
     #[Validate('nullable|string')]
     public string $html = '';
 
+    /** @var array<string, mixed> */
+    public array $design = [];
+
     public string $testEmail = '';
 
     public function mount(): void
@@ -41,6 +44,7 @@ class extends Component
         $this->type = $this->template->type->value;
         $this->subject = $this->template->subject ?? '';
         $this->html = $this->template->html ?? '';
+        $this->design = $this->template->design ?? [];
     }
 
     public function save(): void
@@ -62,6 +66,7 @@ class extends Component
             'type' => $this->type,
             'subject' => $this->subject,
             'html' => $this->html,
+            'design' => $this->design,
             'plain_text' => $plainText,
         ]);
 
@@ -114,6 +119,28 @@ class extends Component
         return MergeTag::defaults();
     }
 
+    public function getUnlayerProjectIdProperty(): ?int
+    {
+        $projectId = config('nettmail.unlayer.project_id');
+
+        return $projectId !== null ? (int) $projectId : null;
+    }
+
+    /** @return array<string, array{name: string, value: string}> */
+    public function getUnlayerMergeTagsProperty(): array
+    {
+        $tags = [];
+
+        foreach ($this->mergeTags as $tag) {
+            $tags[$tag->key] = [
+                'name' => $tag->label,
+                'value' => $this->mergeTagPlaceholder($tag->key),
+            ];
+        }
+
+        return $tags;
+    }
+
     public function mergeTagPlaceholder(string $key): string
     {
         return '{{'.$key.'}}';
@@ -135,53 +162,56 @@ class extends Component
     @endif
 
     <div class="nettmail-card">
-        <form wire:submit="save">
-            <div class="nettmail-field">
-                <label>Name</label>
-                <input type="text" class="nettmail-input" wire:model="name">
-                @error('name') <div class="nettmail-error">{{ $message }}</div> @enderror
-            </div>
-            <div class="nettmail-field">
-                <label>Type</label>
-                <select class="nettmail-select" wire:model="type">
-                    <option value="broadcast">Broadcast</option>
-                    <option value="transactional">Transactional</option>
-                </select>
-            </div>
-            <div class="nettmail-field">
-                <label>Subject</label>
-                <input type="text" class="nettmail-input" wire:model="subject">
-            </div>
+        <div class="nettmail-field">
+            <label>Name</label>
+            <input type="text" class="nettmail-input" wire:model="name">
+            @error('name') <div class="nettmail-error">{{ $message }}</div> @enderror
+        </div>
+        <div class="nettmail-field">
+            <label>Type</label>
+            <select class="nettmail-select" wire:model="type">
+                <option value="broadcast">Broadcast</option>
+                <option value="transactional">Transactional</option>
+            </select>
+        </div>
+        <div class="nettmail-field">
+            <label>Subject</label>
+            <input type="text" class="nettmail-input" wire:model="subject">
+        </div>
+    </div>
 
-            <div class="nettmail-field">
-                <label>Merge tags</label>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    @foreach ($this->mergeTags as $tag)
-                        <button
-                            type="button"
-                            class="nettmail-btn nettmail-btn-secondary"
-                            data-merge-tag="{{ $this->mergeTagPlaceholder($tag->key) }}"
-                            x-on:click="
-                                const field = $refs.html;
-                                const tag = $el.dataset.mergeTag;
-                                const start = field.selectionStart;
-                                const end = field.selectionEnd;
-                                $wire.html = field.value.slice(0, start) + tag + field.value.slice(end);
-                                $nextTick(() => { field.focus(); field.selectionStart = field.selectionEnd = start + tag.length; });
-                            "
-                        >{{ $tag->label }}</button>
-                    @endforeach
-                </div>
-            </div>
+    <div
+        class="nettmail-card"
+        wire:ignore
+        x-data="{
+            editorId: 'nettmail-unlayer-{{ $template->id }}',
+            async save() {
+                const { design, html } = await window.NettMailUnlayer.export(this.editorId);
+                await $wire.set('design', design);
+                await $wire.set('html', html);
+                await $wire.save();
+            },
+        }"
+        x-init="window.NettMailUnlayer.mount(editorId, {
+            design: @js($design ?: null),
+            mergeTags: @js($this->unlayerMergeTags),
+            projectId: @js($this->unlayerProjectId),
+        })"
+    >
+        <label>Design</label>
+        <div id="nettmail-unlayer-{{ $template->id }}" style="border: 1px solid #cbd5e1; border-radius: 0.375rem;"></div>
+        @error('html') <div class="nettmail-error">{{ $message }}</div> @enderror
 
-            <div class="nettmail-field">
-                <label>HTML</label>
-                <textarea x-ref="html" class="nettmail-textarea" wire:model.live="html" rows="14"></textarea>
-                @error('html') <div class="nettmail-error">{{ $message }}</div> @enderror
-            </div>
+        <button type="button" class="nettmail-btn" style="margin-top: 1rem;" x-on:click="save">Save</button>
+    </div>
 
-            <button type="submit" class="nettmail-btn">Save</button>
-        </form>
+    <div class="nettmail-card">
+        <details>
+            <summary>Advanced: raw HTML</summary>
+            <div class="nettmail-field" style="margin-top: 0.75rem;">
+                <textarea class="nettmail-textarea" wire:model.live="html" rows="14"></textarea>
+            </div>
+        </details>
     </div>
 
     <div class="nettmail-card">
@@ -201,4 +231,6 @@ class extends Component
             <button type="submit" class="nettmail-btn">Send test</button>
         </form>
     </div>
+
+    <script src="{{ asset('vendor/nettmail/unlayer-editor.js') }}"></script>
 </div>
