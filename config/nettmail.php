@@ -77,6 +77,13 @@ return [
      */
     'nav_group' => env('NETTMAIL_NAV_GROUP', 'NettMail'),
 
+    /*
+     * Blade component name (e.g. "layout.app") used to render the admin
+     * pages inside the host app's layout. Null falls back to the
+     * package's standalone admin layout.
+     */
+    'layout' => env('NETTMAIL_LAYOUT'),
+
     'tracking' => [
         'opens' => env('NETTMAIL_TRACK_OPENS', true),
         'clicks' => env('NETTMAIL_TRACK_CLICKS', true),

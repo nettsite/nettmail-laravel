@@ -1,3 +1,8 @@
+@if ($hostLayout = config('nettmail.layout'))
+<x-dynamic-component :component="$hostLayout">
+    {{ $slot }}
+</x-dynamic-component>
+@else
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -73,3 +78,4 @@
         @livewireScripts
     </body>
 </html>
+@endif
