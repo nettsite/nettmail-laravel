@@ -15,10 +15,9 @@ You can install the package via composer:
 composer require nettsite/nettmail-laravel
 ```
 
-You can publish and run the migrations with:
+Run the migrations (the package loads its own migrations — do not publish them, or they will run twice):
 
 ```bash
-php artisan vendor:publish --tag="nettmail-migrations"
 php artisan migrate
 ```
 
