@@ -119,28 +119,6 @@ class extends Component
         return MergeTag::defaults();
     }
 
-    public function getUnlayerProjectIdProperty(): ?int
-    {
-        $projectId = config('nettmail.unlayer.project_id');
-
-        return $projectId !== null ? (int) $projectId : null;
-    }
-
-    /** @return array<string, array{name: string, value: string}> */
-    public function getUnlayerMergeTagsProperty(): array
-    {
-        $tags = [];
-
-        foreach ($this->mergeTags as $tag) {
-            $tags[$tag->key] = [
-                'name' => $tag->label,
-                'value' => $this->mergeTagPlaceholder($tag->key),
-            ];
-        }
-
-        return $tags;
-    }
-
     public function mergeTagPlaceholder(string $key): string
     {
         return '{{'.$key.'}}';
@@ -180,26 +158,32 @@ class extends Component
         </div>
     </div>
 
+    <div class="nettmail-card">
+        <strong>Available merge tags:</strong>
+        @foreach ($this->mergeTags as $tag)
+            <code>{{ $this->mergeTagPlaceholder($tag->key) }}</code>
+        @endforeach
+    </div>
+
     <div
         class="nettmail-card"
         wire:ignore
         x-data="{
-            editorId: 'nettmail-unlayer-{{ $template->id }}',
+            editorId: 'nettmail-gjs-{{ $template->id }}',
             async save() {
-                const { design, html } = await window.NettMailUnlayer.export(this.editorId);
-                await $wire.set('design', design);
+                const { projectData, html } = window.NettMailGrapesJS.export(this.editorId);
+                await $wire.set('design', projectData);
                 await $wire.set('html', html);
                 await $wire.save();
             },
         }"
-        x-init="window.NettMailUnlayer.mount(editorId, {
-            design: @js($design ?: null),
-            mergeTags: @js($this->unlayerMergeTags),
-            projectId: @js($this->unlayerProjectId),
+        x-init="window.NettMailGrapesJS.mount(editorId, {
+            html: @js($html),
+            projectData: @js($design ?: null),
         })"
     >
         <label>Design</label>
-        <div id="nettmail-unlayer-{{ $template->id }}" style="border: 1px solid #cbd5e1; border-radius: 0.375rem;"></div>
+        <div id="nettmail-gjs-{{ $template->id }}" style="border: 1px solid #cbd5e1; border-radius: 0.375rem;"></div>
         @error('html') <div class="nettmail-error">{{ $message }}</div> @enderror
 
         <button type="button" class="nettmail-btn" style="margin-top: 1rem;" x-on:click="save">Save</button>
@@ -232,5 +216,6 @@ class extends Component
         </form>
     </div>
 
-    <script src="{{ asset('vendor/nettmail/unlayer-editor.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('vendor/nettmail/grapesjs-editor.css') }}">
+    <script src="{{ asset('vendor/nettmail/grapesjs-editor.js') }}"></script>
 </div>

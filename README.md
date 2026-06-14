@@ -35,11 +35,7 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="nettmail-views"
 ```
 
-The template editor uses the [Unlayer](https://unlayer.com) drag-and-drop email builder, bundled as a prebuilt asset. Set your Unlayer project ID (from your unlayer.com dashboard) in `.env`:
-
-```env
-NETTMAIL_UNLAYER_PROJECT_ID=287570
-```
+The template editor uses [GrapesJS](https://grapesjs.com) with the newsletter preset, bundled as a prebuilt asset — fully self-hosted, no external service or account required.
 
 Publish the editor asset with:
 
@@ -47,7 +43,7 @@ Publish the editor asset with:
 php artisan vendor:publish --tag="nettmail-assets"
 ```
 
-This copies `unlayer-editor.js` to `public/vendor/nettmail`. Re-run this command after upgrading the package to pick up editor updates.
+This copies `grapesjs-editor.js` and `grapesjs-editor.css` to `public/vendor/nettmail`. Re-run this command after upgrading the package to pick up editor updates.
 
 The admin UI is mounted at `/nettmail` (configurable via `NETTMAIL_ROUTES_PREFIX`) behind the `web` and `auth` middleware (configurable via `routes.middleware`). It includes pages for the dashboard, contacts, lists, segments, campaigns, templates, and settings.
 

@@ -66,13 +66,6 @@ return [
     ],
 
     /*
-     * Unlayer project ID for the template editor, from unlayer.com.
-     */
-    'unlayer' => [
-        'project_id' => env('NETTMAIL_UNLAYER_PROJECT_ID'),
-    ],
-
-    /*
      * Host app navigation group label, consumed by the host's nav.
      */
     'nav_group' => env('NETTMAIL_NAV_GROUP', 'NettMail'),

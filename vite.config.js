@@ -1,19 +1,20 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-    plugins: [react()],
-    define: {
-        'process.env.NODE_ENV': JSON.stringify('production'),
-    },
     build: {
         outDir: 'resources/dist',
         emptyOutDir: true,
+        cssCodeSplit: false,
         lib: {
-            entry: 'resources/js/unlayer-editor.jsx',
-            name: 'NettMailUnlayer',
+            entry: 'resources/js/grapesjs-editor.js',
+            name: 'NettMailGrapesJS',
             formats: ['iife'],
-            fileName: () => 'unlayer-editor.js',
+            fileName: () => 'grapesjs-editor.js',
+        },
+        rollupOptions: {
+            output: {
+                assetFileNames: 'grapesjs-editor.[ext]',
+            },
         },
     },
 });
